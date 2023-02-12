@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://bimash.com.np/assets/img/favicon.png" rel="icon">
+    <link href="https://bimash.com.np/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>Chat App</title>
+    <meta name="google-signin-client_id"  content="467291088215-ulvpckdk6ipfhf3inci8dqvh11n2s9c6.apps.googleusercontent.com" />
+    <link rel="stylesheet" href="https://bimash.com.np/assets/css/style.css">
+    <link rel="stylesheet" href="https://cloud.bimash.com.np/assets/css/chat.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+    <link rel="stylesheet" href="./assets/css/chat.css">
+
+    <meta name="description" content="Live Chat app with global Community">
+    <meta name="author" content="Bimash Maharjan">
+    <meta name="keywords"
+        content="Chat app , Bimash Maharjan ,  Web Socket chat , Simple chat app , login with facebook">
+</head>
+
+
+    <body id="body"  class='g-sidenav-show  bg-gray-100'>
+        <div class="modal max-height-vh-100 fade show" id="loginnow" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" style="display: block;">
+            <div class="modal-dialog vh-100 my-0 d-flex align-items-center justify-content-center">
+                <div class="modal-content w-80 border-none shadow-lg">
+                    <div class="modal-body">
+                        <div class="">
+                            <div class="card-header text-center pt-4 pb-1">
+                                <h4 class="font-weight-bolder mb-1">Log in</h4>
+                                <p class="mb-0" id="message_signup">Welcome back</p>
+
+                            </div>
+                            <div class="card-body pb-0">
+                                <form>
+                                    <div class="mb-3">
+                                        <input type="email" class="form-control" id="login_email" placeholder="Email" aria-label="Email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="password" class="form-control" placeholder="Password"
+                                           id="login_pass" aria-label="Password">
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                                    </div>
+                                    <div class="text-center">
+                                        <button id="loginuser" type="button" class="btn bg-gradient-info w-100 mt-4 mb-2">Sign
+                                            in</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer text-center pt-0 px-sm-4 px-1">
+                                <div class="row px-xl-5 px-sm-4 px-3">
+                                    <div class="mt-3 mb-4 position-relative text-center">
+                                        <p
+                                            class="text-sm font-weight-bold text-secondary text-border p-0 d-inline z-index-2 bg-white px-3">
+                                            or continue with
+                                        </p>
+                                    </div>
+                                    <span id='loginwithfb' class="px-2.5 mb-2">
+                                        <div class="form-control cursor-pointer d-flex justify-content-between p-2">
+                                            <h5 class="mb-0 text-info fa-brands fa-facebook "></h5>
+                                            <span class="m-0 mx-auto ">Login with Facebook</span>
+                                        </div>
+                                    </span>
+                                    <div class="fb-login-button d-none" data-size="" data-button-type="login_with"
+                                        data-auto-logout-link="true" data-use-continue-as="true"></div>
+                                    <div id="g_id_onload"
+                                        data-client_id="467291088215-ulvpckdk6ipfhf3inci8dqvh11n2s9c6.apps.googleusercontent.com"
+                                        data-callback="handleCredentialResponse">
+                                    </div>
+                                    <div class="g_id_signin" data-type="standard"></div>
+                                </div>
+                                <p class="mb-0 mt-3 text-sm mx-auto">
+                                    Don't have an account?
+                                    <a href="./signup" class="text-info text-gradient font-weight-bold">Sign up</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="dummybody"></div>
+    </body>
+    
+<script>
+    $('#loginwithgoogle').click(function () {
+        document.getElementById('loginwithgooglebtn').click()
+        alert();
+    })
+
+</script>
+<script src="./assets/js/dummy.js"></script>
+<script src="https://connect.facebook.net/en_US/sdk.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="./assets/js/login/loginvia.js"></script>
+<script src="./assets/js/login/loginorsignup.js"></script>
+<script defer src="./assets/js/generatetoken.js"></script>
+<script defer src="./assets/js/decodetoken.js"></script>
+<script src="https://bimash.com.np/assets/js/main.js"></script>
+<script>
+//     var user_id = 118941851;
+//     var access_email = 'esportnepal1@gmail.com';
+//     var access_picture = 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=1797231910435792&height=160&ext=1678246692&hash=AeSS765JWBc4oemaUUs';
+//     var access_name = 'Esport'
+//     $.ajax({
+//         url: '/login-user',
+//         method: 'POST',
+//         headers: {
+//             "Content-Type": "application/json"
+//         },
+//         data: JSON.stringify({
+//             "get_user": "facebook",
+//             user_id,
+//             access_email,
+//             access_picture,
+//             access_name
+//         }),
+//         success: function (res) {
+//             localStorage.setItem("access_token", jwt_token(res))
+//             localStorage.setItem('access_name', access_name);
+//             localStorage.setItem('access_picture', res.access_picture)
+//             localStorage.setItem('access_id', user_id)
+//             localStorage.setItem('access_email', access_email)
+//             window.location.href = '/';
+//         }
+//     })
+// </script>
+</html>
