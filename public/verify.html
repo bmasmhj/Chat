@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://bimash.com.np/assets/img/favicon.png" rel="icon">
+    <link href="https://bimash.com.np/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>Chat App</title>
+    <meta name="google-signin-client_id"
+        content="467291088215-ulvpckdk6ipfhf3inci8dqvh11n2s9c6.apps.googleusercontent.com" />
+    <link rel="stylesheet" href="https://bimash.com.np/assets/css/style.css">
+    <link rel="stylesheet" href="https://cloud.bimash.com.np/assets/css/chat.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/hmac-sha256.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js"></script>
+    <link rel="stylesheet" href="./assets/css/chat.css">
+
+    <meta name="description" content="Live Chat app with global Community">
+    <meta name="author" content="Bimash Maharjan">
+    <meta name="keywords"
+        content="Chat app , Bimash Maharjan ,  Web Socket chat , Simple chat app , login with facebook">
+</head>
+
+
+<body id="body" class='g-sidenav-show  bg-gray-100'>
+    <div class="modal max-height-vh-100 fade show" id="loginnow" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" style="display: block;">
+        <div class="modal-dialog vh-100 my-0 d-flex align-items-center justify-content-center">
+            <div class="modal-content w-80 border-none shadow-lg">
+                <div class="modal-body">
+                    <div class="">
+                        <div class="card-header text-center pt-4 pb-1">
+                            <p class="font-weight-bolder mb-1">We have sent you email in <strong id="email_here"></strong> please check spam if not found</p>
+                            <p id="otp_info_msg"></p>
+                        </div>
+                        <div class="card-body pb-0">
+                            <form>
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" id="code" placeholder="OTP code" aria-label="Email">
+                                </div>
+                                <div class="text-center">
+                                    <button id="verifytoken" type="button"  class="btn bg-gradient-info w-100 mt-4 mb-2">Verify</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dummybody"></div>
+</body>
+<script src="./assets/js/dummy.js"></script>
+<script defer src="./assets/js/generatetoken.js"></script>
+<script defer src="./assets/js/decodetoken.js"></script>
+<script src="https://bimash.com.np/assets/js/main.js"></script>
+
+</html>
+
+<script>
+    if (localStorage.getItem("access_token")) {
+            window.location.href = '/';
+        }
+    $('#email_here').html(localStorage.getItem("access_email"));
+    $('#verifytoken').click(function () {
+            access_email = localStorage.getItem("access_email");
+            var code = $('#code').val()
+            $.ajax({
+                url: '/verify-user',
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify({
+                    code,
+                    access_email,
+                }),
+                success: function (res) {
+                    if(res.status == 'verified'){
+                        $('#otp_info_msg').html('Verified')
+                        localStorage.setItem('access_token', jwt_token(res))
+                        localStorage.setItem('access_name', res.access_name);
+                        localStorage.setItem('access_picture', res.access_picture)
+                        localStorage.setItem('access_id', res.user_id)
+                        localStorage.setItem('access_email', access_email)
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 1000);
+                    }else{
+                        $('#otp_info_msg').html('Invalid OTP')
+                    }
+                    
+                }
+            })
+        })
+</script>
