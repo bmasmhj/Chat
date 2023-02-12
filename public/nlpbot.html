@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://bimash.com.np/assets/img/favicon.png" rel="icon">
+    <link href="https://bimash.com.np/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="https://bimash.com.np/assets/css/style.css">
+    <link rel="stylesheet" href="https://cloud.bimash.com.np/assets/css/chat.css">
+    <link rel="stylesheet" href="https://cdn.bimash.com.np/chat/uimanager.css">
+
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <meta name="description" content="Live Chat app with global Community">
+    <meta name="author" content="Bimash Maharjan">
+    <meta name="keywords"
+        content="Chat app , Bimash Maharjan ,  Web Socket chat , Simple chat app , login with facebook">
+</head>
+
+
+<body id="body" class='g-sidenav-show  bg-gray-100'>
+    <main class="main-content p-0 p-md-3 position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <div class="bg-white">
+            <div class="row m-0 p-0">
+                <div class="col-md-8 col-lg-9 col-12 m-0 p-0" id="chatboxsection">
+                    <h5 class="p-2">
+                        Chat Bot <span class="float-end">
+                            <!-- <span  id="active_users"></span> -->
+                            <i class="text-info fa-duotone fa-circle-info cursor-pointer" id="sidemenu"></i>
+                        </span></h5>
+                    <div class="chat-box">
+                        <div  id='chat-msg'></div>      
+                    </div>
+                    <form id='messagedata' class="typing-area">
+                        <input type="text" name="message" class="input-field" id='message'
+                            placeholder="Type a message here..." autocomplete="off">
+                        <button id='send-data' type='button'><i
+                                class="fa-duotone fa-paper-plane-top text-white"></i></button>
+                    </form>
+                </div>
+                <div class="col-md-4 col-lg-3" id="sidebarmenu">
+                    <div class="p-3">
+                        <ul class="list-group">
+                            <li class="list-group-item border-0 d-flex align-items-center px-0 mb-2">
+                                <div class="avatar me-3">
+                                    <img src="" id="profilepic" alt="profile pic" class=" rounded-circle shadow">
+                                </div>
+                                <div class="d-flex align-items-start flex-column justify-content-center">
+                                    <h6 class="mb-0 text-sm" id="user_name"></h6>
+                                    <p class="mb-0 text-xs" id="user_email"></p>
+                                </div>
+                                <div id='logout' class="btn btn-link text-dark pe-3 ps-0 mb-0 ms-auto">
+                                    <h5 class="fa-duotone fa-right-from-bracket"></h5><br>
+                                    <small>Log Out</small>
+                                </div>
+                                <i class="fa-solid fa-xmark d-block d-md-none" id="close_sidenav"></i>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card mb-3 card-background shadow-none card-background-mask-secondary" id="nlpBot">
+                        <div class="full-background"
+                            style="background-image: url('../assets/img/curved-images/white-curved.jpg')">
+                        </div>
+                        <div class="card-body text-start p-3 w-100 d-flex align-items-center ">
+                            <div
+                                class="icon icon-shape icon-md bg-white shadow text-center d-flex align-items-center justify-content-center rounded-circle">
+                                <img src='https://chat.bimash.com.np/assets/images/comunity.jpg'
+                                    class='w-100 rounded-circle' />
+                            </div>
+                            <h6 class="text-white up mb-0 mx-3" style="flex-grow: 1;">Chat with Community</h6>
+                            <div class="float-end">
+                                <!-- <i class="fa-solid fa-xmark" id="close_bot"></i> -->
+                                <a href="./" class="btn mb-0 bg-gradient-info   "> Try</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-top p-3 total_user">
+                        <h5>Users : <span id="total_user_count"></span></h5>
+                        <ul class="list-group" id="user_list">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script defer src="./assets/js/socket-nlp.js"></script>
+
+<script src="https://bimash.com.np/assets/js/main.js"></script>
+<script src="assets/js/uimanager.js"></script>
+
+</html>
