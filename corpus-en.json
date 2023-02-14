@@ -7,11 +7,12 @@
         "utterances": [
           "Who created you",
           "who made you",
-          "who is creator"
+          "who is creator",
+          "are you trained ?"
         ],
         "answers": [
-              "some one did",
-              "I was created by <a href='https://bimash.com.np'>Bimash Maharjan</a>, but trained by many people",
+              "umm.. some one did",
+              "I was created by <a href='https://bimash.com.np'>Bimash Maharjan</a>, and trained by many people",
               "Find my creator and trainer by clicking  <a target='_blank' href='https://bimash.com.np'>here</a>"
         ]
       },
@@ -46,7 +47,7 @@
         "utterances": [
           "say about you",
           "why are you here",
-          "what is your personality",
+          "your personality",
           "describe yourself",
           "tell me about yourself",
           "tell me about you",
@@ -906,13 +907,17 @@
           "I'm not sure I'll have the best answer, but I'll try"
         ]
       },
-      {
-        "intent": "None",
+       {
+        "intent": "user.question",
         "utterances": [
-          "the","then"
+         "what is",
+         "who is",
+         "how did",
+         "where was",
+         "when did"
         ],
         "answers": [
-          "Sorry, I don't understand"
+          "websearch"
         ]
       }
     ]
