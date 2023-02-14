@@ -18,7 +18,9 @@ const signup = require('./src/login/signup.js').signup;
 const verify_user = require('./src/login/verifycode.js').verify_user;
 const addmessage = require('./src/messages/addmessage.js');
 const add_chatbotmsg = require('./src/chatbot/chatbot.js');
+const train_to_db = require('./src/chatbot/train_chatbot.js');
 
+const axios = require('axios');
 
 
 app.use(express.static("public"));
@@ -55,54 +57,44 @@ const { dockStart } = require('@nlpjs/basic');
 
 async function startNLP() {
   const dock = await dockStart({ use: ['Basic']});
-  const nlp = dock.get('nlp');
-  await nlp.addCorpus('./corpus-en.json');
-  await nlp.train();
+  const nlp_bot = dock.get('nlp');
+  await nlp_bot.addCorpus('https://api.bimash.com.np/chatbot/dataset.php');
+  await nlp_bot.train();
   io.on("connection", (socket) => {
-      socket.on("new-nlp-message", (message) => {
-          const msg = message.text;
-          add_chatbotmsg(message.socket_sender, msg, 'outgoing');
-          nlp.process('en', message.text).then((value) => {
-            // console.log(value['answer']);
-            // console.log(value['answers']);
-              if (value['answers'].length > 0 && value['answers'] != undefined) {
-                const ans = value['answer'];
-                function encodeHTML(str) {
-                    return str.replace(/[<>&"'`!*]/g, function (c) {
-                        return `&#${c.charCodeAt(0)};`;
-                    });
-                }
-                  add_chatbotmsg(message.socket_sender, encodeHTML(ans), 'incoming');
+    const moment = require('moment-timezone');
+    function time_stamp() {
+      const now = moment.tz('Asia/Kathmandu');
+      const mysqlTimestamp = now.format('YYYY-MM-DD HH:mm:ss');
+      return mysqlTimestamp;
+    }
+    socket.on("new-nlp-message", (message) => {
+      const msg = message.text;
+        var now_time = time_stamp();
+        add_chatbotmsg(message.socket_sender, msg, 'outgoing' , now_time);
+        nlp_bot.process('en', message.text).then((value) => {
+          console.log(value['answer']);
+          console.log(value['answers']);
+            if (value['answers'].length > 0 && value['answers'] != undefined && value['answer']!='' ) {
+              var ans = value['answer'];
+              if (ans.includes('websearch')) {
+                findinweb(msg);
+              } else {
+                sendsocketmsg(value['answer'])
+              }
+            } else {
+                findinweb(msg);
+          }
+          function sendsocketmsg(ans) {
+            try {
+                var now_time = time_stamp();
+                add_chatbotmsg(message.socket_sender, ans, 'incoming' , now_time);
                   socket.emit("new-nlp-message", {
                     text: ans,
                     type : "bot",
                       socket_sender: message.socket_sender
                   });
-                socket.broadcast.emit("new-nlp-message", {
-                      text: ans,
-                      type : "bot",
-                      socket_sender: message.socket_sender
-                });
-                socket.broadcast.emit("new-nlp-message", {
-                      text: msg,
-                      type : "user",
-                      socket_sender: message.socket_sender
-                  });
-              } else {
-                const ans = "Sorry, I don't understand";
-                function encodeHTML(str) {
-                    return str.replace(/[<>&"'`!*]/g, function (c) {
-                        return `&#${c.charCodeAt(0)};`;
-                    });
-                }
-                  add_chatbotmsg(message.socket_sender,  encodeHTML(ans) , 'incoming');
-                  socket.emit("new-nlp-message", {
-                        text: ans ,
-                        type : "bot",
-                        socket_sender: message.socket_sender
-                    });
                   socket.broadcast.emit("new-nlp-message", {
-                        text: ans ,
+                        text: ans,
                         type : "bot",
                         socket_sender: message.socket_sender
                   });
@@ -111,22 +103,65 @@ async function startNLP() {
                         type : "user",
                         socket_sender: message.socket_sender
                     });
-              }
-          });
-      });
+            } catch {
+                var now_time = time_stamp();
+              add_chatbotmsg(message.socket_sender, 'Something went wrong', 'incoming', now_time);
+                socket.emit("new-nlp-message", {
+                    text: 'Something went wrong',
+                    type : "bot",
+                      socket_sender: message.socket_sender
+                  });
+                  socket.broadcast.emit("new-nlp-message", {
+                        text: 'Something went wrong',
+                        type : "bot",
+                        socket_sender: message.socket_sender
+                  });
+                  socket.broadcast.emit("new-nlp-message", {
+                        text: msg,
+                        type : "user",
+                        socket_sender: message.socket_sender
+                    });
+
+            }
+          }
+          function findinweb(qur) {
+            const nlp = require('compromise');
+            console.log('Searching web..');
+              axios({
+                    method: 'get',
+                    url: 'https://api.bimash.com.np/chatbot/scrapper.php?q='+qur,
+                  })
+                  .then(function (response) {
+                      // console.log(response)
+                      var docx = nlp(qur);
+                      var json = JSON.stringify(docx.nouns().text());
+                    var intent = json.toLowerCase().trim().replaceAll('"', '').replaceAll(' ', '');
+                    console.log(`Intent = ${intent} , utterances = ${qur} , answer =  ${response.data}`)
+                    nlp_bot.addLanguage('en');
+                    nlp_bot.addDocument('en', qur , `question.${intent}`);
+                    nlp_bot.addAnswer('en', `question.${intent}`, response.data);
+                    nlp_bot.train();
+                    train_to_db( intent , qur , response.data);
+                      sendsocketmsg(response.data)
+                  });
+          }
+        });
+    });
 
 
     socket.on("user-connected", (user) => {
       users[socket.id] = { user, id: socket.id };
       socket.broadcast.emit("users-online", Object.values(users));
-      // console.log("user-connected", users);    
+      console.log("user-connected", users);    
     });
 
 
     socket.on("new-chat-message", (message) => {
       // console.log("new-chat-message", message);
       socket.broadcast.emit("users-online", Object.values(users));
-      addmessage(message.socket_sender , message.text )
+      var now_time = time_stamp();
+
+      addmessage(message.socket_sender , message.text , now_time )
       socket.broadcast.emit("new-chat-message", {
         text: message.text,
         socket_sender : message.socket_sender,
@@ -142,14 +177,14 @@ async function startNLP() {
     socket.on("disconnect", () => {
       const objects = users[socket.id];
       try {
-        if (objects.user.username) {
-          console.log("user-went-off" , objects.user.username);
+        if (objects) {
+          delete users[socket.id];
+          console.log("user-went-off" , objects);
         }
       } catch(error) {
         console.error(error);
         console.log('No-user to disconnect')
       }
-      delete users[socket.id];
       socket.broadcast.emit("users-online", Object.values(users));
       // console.log("users-online", users);
     });
