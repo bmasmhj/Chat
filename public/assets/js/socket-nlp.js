@@ -30,7 +30,12 @@ if(validatelogin()){
         success : function(res){
             // console.log(res.data);   
             const ress = res.data
-           var len = ress.length;
+            var len = ress.length;
+            if (len > 8) {
+                $('#chat-msg').addClass('moremsg');
+            } else {
+                $('#chat-msg').addClass('lessmsg');
+            }
            for(var lk = 0 ; lk < len ; lk++ ){
              if(ress[lk].msg_type == 'incoming' ){
                 // document.querySelector('ul').appendChild(el)
@@ -173,7 +178,7 @@ $('#send-data').click(function(){
             `);
             scrollToBottom();
             $('#message').val('');
-       }
+        }
    }else{
     window.location.href = '/login';
    }
@@ -223,3 +228,16 @@ function validatelogin(){
         return false
     }
 }
+
+
+socket.on('connect_error', (error) => {
+    $('#socket_msg').html(`
+        <span class="p-3 bg-danger text-white popop">Server connection error.. Please wait while we try to reconnect</span>
+    `)
+});
+
+socket.on('connect_timeout', () => {
+    $('#socket_msg').html(`
+        <span class="p-3 bg-danger text-white popop">Server Connection timeout.. Please reload to see changes</span>
+    `)
+});

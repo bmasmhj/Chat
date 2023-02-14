@@ -218,3 +218,20 @@ function validatelogin(){
         return false
     }
 }
+
+socket.onclose = function (event) {
+    alert('Server is restarting...')
+}
+
+
+socket.on('connect_error', (error) => {
+    $('#socket_msg').html(`
+        <span class="p-3 bg-danger text-white popop">Server connection error.. Please wait while we try to reconnect</span>
+    `)
+});
+
+socket.on('connect_timeout', () => {
+    $('#socket_msg').html(`
+        <span class="p-3 bg-danger text-white popop">Server Connection timeout.. Please reload to see changes</span>
+    `)
+});
