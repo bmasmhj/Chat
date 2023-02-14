@@ -8,7 +8,7 @@
     <link href="https://bimash.com.np/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
     <title>Chat App</title>
     <link rel="stylesheet" href="https://bimash.com.np/assets/css/style.css">
-    <link rel="stylesheet" href="https://cloud.bimash.com.np/assets/css/chat.css">
+    <link rel="stylesheet" href="https://cdn.bimash.com.np/chat/chat.css">
     <link rel="stylesheet" href="https://cdn.bimash.com.np/chat/uimanager.css">
 
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
@@ -20,13 +20,22 @@
         content="Chat app , Bimash Maharjan ,  Web Socket chat , Simple chat app , login with facebook">
 </head>
 
-
+<style>
+    .popop{
+        position: absolute;
+        top: 8%;
+        z-index: 99999;
+        right: 50%;
+    }
+</style>
 <body id="body" class='g-sidenav-show  bg-gray-100'>
     <main class="main-content p-0 p-md-3 position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <span id="pop_noti" class="p-3 bg-warning text-white popop">(Bot will restart every day at 9:00 PM (GMT+5:45) to train ) <i id='closegmt' class="cursor-pointer text-dark fa-regular fa-xmark"></i></span>
+       <div id="socket_msg"></div>
         <div class="bg-white">
             <div class="row m-0 p-0">
                 <div class="col-md-8 col-lg-9 col-12 m-0 p-0" id="chatboxsection">
-                    <h5 class="p-2">
+                    <h5 class="p-2 shadow m-0 border">
                         Chat Bot <span class="float-end">
                             <!-- <span  id="active_users"></span> -->
                             <i class="text-info fa-duotone fa-circle-info cursor-pointer" id="sidemenu"></i>
@@ -93,5 +102,13 @@
 
 <script src="https://bimash.com.np/assets/js/main.js"></script>
 <script src="assets/js/uimanager.js"></script>
+<script>
+    $('#closegmt').click(function(){
+        $('#pop_noti').addClass('d-none')
+    })
+    setTimeout(() => {
+        $('#pop_noti').addClass('d-none')
+    }, 5000);
+</script>
 
 </html>
