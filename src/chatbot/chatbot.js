@@ -1,8 +1,9 @@
 const database = require('../database/connection.js').database;
 
-function add_chatbotmsg(uid, message, type) {
-    
-    database.query(`INSERT INTO chatbot_message (user_id , message , type ) VALUES ('${uid}' ,'${message}' , '${type}')`, function (error, results , fields) {
+function add_chatbotmsg(uid, message, type , now_time) {
+    let addQuery = "INSERT INTO chatbot_message (user_id , message , type , created_at) VALUES (?,? , ? , ?)";
+    let values = [uid , message , type , now_time]
+    database.query(addQuery, values,  function (error, results , fields) {
         if (error) throw error;
         return results
     });
