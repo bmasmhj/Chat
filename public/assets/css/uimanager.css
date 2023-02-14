@@ -8,7 +8,12 @@ border: 1px solid red;
 .chat-box {
     min-height: calc(100vh - 139px);
 }
-
+.lessmsg {
+    bottom: 0;
+    position: absolute;
+    /* height: auto; */
+    width: calc(100% - 55px)!important;
+}
 .mobile_nav {
     position: absolute;
     background: white;
@@ -48,10 +53,7 @@ border: 1px solid red;
     }
 }
  #chat-msg {
-     bottom: 0;
-     position: absolute;
-     height: auto;
-     width: calc(100% - 55px);
+     width: calc(100% - 5px);
  }
 
 /*Huge thanks to @tobiasahlin at http://tobiasahlin.com/spinkit/ */

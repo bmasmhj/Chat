@@ -80,12 +80,14 @@
 
 .outgoing .details p {
     background: #333;
+    max-width: 250px;
     color: #fff;
     border-radius: 18px 18px 0 18px;
 }
 
 .chat-box .incoming {
     display: flex;
+    max-width: 65%;
     align-items: flex-end;
 }
 
