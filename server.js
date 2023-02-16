@@ -60,6 +60,15 @@ async function startNLP() {
   const nlp_bot = dock.get('nlp');
   await nlp_bot.addCorpus('https://api.bimash.com.np/chatbot/dataset.php');
   await nlp_bot.train();
+  app.post('/train-bot', (req, res, next) => {
+          console.log(req.body);
+          res.send(req.body)
+          // nlp_bot.addDocument('en', 'yo bro' , `agent.greetings`);
+          // nlp_bot.addAnswer('en', `agent.greetings`, 'yo yo yoo !');
+          // nlp_bot.train();
+          // train_to_db( domain , intent , qur , response.data);
+    
+    })
   io.on("connection", (socket) => {
     const moment = require('moment-timezone');
     function time_stamp() {
@@ -137,24 +146,24 @@ async function startNLP() {
                       var json = JSON.stringify(docx.nouns().text());
                     var intent = json.toLowerCase().trim().replaceAll('"', '').replaceAll(' ', '');
                     console.log(`Intent = ${intent} , utterances = ${qur} , answer =  ${response.data}`)
-                    nlp_bot.addLanguage('en');
                     nlp_bot.addDocument('en', qur , `question.${intent}`);
                     nlp_bot.addAnswer('en', `question.${intent}`, response.data);
                     nlp_bot.train();
-                    train_to_db( intent , qur , response.data);
+                    var domain_id = 6;
+                    train_to_db( domain_id , intent , qur , response.data);
                       sendsocketmsg(response.data)
                   });
           }
         });
     });
-
-
     socket.on("user-connected", (user) => {
       users[socket.id] = { user, id: socket.id };
       socket.broadcast.emit("users-online", Object.values(users));
       console.log("user-connected", users);    
     });
 
+
+    
 
     socket.on("new-chat-message", (message) => {
       // console.log("new-chat-message", message);
@@ -170,10 +179,7 @@ async function startNLP() {
 
       });
     });
-      
-      
-  
-    
+          
     socket.on("disconnect", () => {
       const objects = users[socket.id];
       try {

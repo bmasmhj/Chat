@@ -2,7 +2,7 @@
 
 const database = require('../database/connection.js').database;
 
-function train_to_db(intent, utterance, answer) {
+function train_to_db(domain_id , intent, utterance, answer) {
 
     function encodeHTML(str) {
         return str.replace(/[<>&"'`!*,]/g, function (c) {
@@ -14,7 +14,6 @@ function train_to_db(intent, utterance, answer) {
     var answer = encodeHTML(answer);
     
     // Prepare the INSERT statement for the intent table
-    const domain_id = 6; // Replace with the actual domain ID
      database.query(`SELECT * FROM intent where domain_id = ${domain_id} AND name = '${intent}' `, function (error, results , fields) {
         if (error) throw error;
         if (results.length > 0) {
