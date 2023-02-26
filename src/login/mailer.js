@@ -2,13 +2,13 @@ const nodemailer = require('nodemailer');
 
 const sendcode = (email, code) => {
     const transporter = nodemailer.createTransport({
-        host: 'mail.bimash.com.np',
-        port: 465,
+        host: 'MAIL_DOMAIN',
+        port: PORT,
         secure: true,
-        auth: { user: 'noreply@bimash.com.np', pass: 'L9fWvqR@TMFUkVQ' }
+        auth: { user: 'SOME_USERNAME', pass: 'SOME_PASSWORD' }
     });
     transporter.sendMail({
-        from: 'Chat App <noreply@bimash.com.np>',
+        from: 'Chat App <MAIL_DOMAIN>',
         to: email,
         subject: 'Email Verification',
         text: `Your code is : ${code}`
