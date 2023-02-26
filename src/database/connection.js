@@ -1,10 +1,10 @@
 const mysql = require('mysql2');
 
 const database = mysql.createConnection({
-  host     : 'corporate.vip1.noc401.com',
-  user     : 'bimashco_main',
-  password : 'wDnd+?rjdfb3',
-  database : 'bimashco_chatapp'
+  host     : 'Databasehost',
+  user     : 'username',
+  password : 'password',
+  database : 'database'
 });
 
 database.connect(function(err) {
